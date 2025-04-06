@@ -7,7 +7,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/foundation.dart';
 
-
 ///
 typedef _Fn = void Function();
 
@@ -36,7 +35,7 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
   @override
   void initState() {
     super.initState();
-    setCodec(Codec.pcmFloat32);
+    setCodec(Codec.pcm16);
     // Do not access your FlutterSoundPlayer or FlutterSoundRecorder before the completion of the Future
     _mPlayer!.openPlayer().then((value) {
       setState(() {
@@ -71,7 +70,7 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
   // ----------------------  Here is the code to record to a Stream ------------
 
   static const int cstSAMPLERATE = 16000;
-  static const int cstCHANNELNB = 2;
+  static const int cstCHANNELNB = 1;
 
   /// We have finished with the recorder. Release the subscription
   Future<void> cancelRecorderSubscriptions() async {
@@ -148,6 +147,7 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
 
     _mplaybackReady = true;
   }
+
   // --------------------- (it was very simple, wasn't it ?) -------------------
 
   _Fn? getRecorderFn() {
@@ -244,78 +244,13 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
                 : Container(),
           ]),
         ),
-        Container(
-            margin: const EdgeInsets.all(3),
-            padding: const EdgeInsets.all(3),
-            height: 120,
-            width: double.infinity,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: const Color(0xFFFAF0E6),
-              border: Border.all(
-                color: Colors.indigo,
-                width: 3,
-              ),
-            ),
-            child: Row(children: [
-              ElevatedButton(
-                onPressed: getPlaybackFn(),
-                //color: Colors.white,
-                //disabledColor: Colors.grey,
-                child: Text(_mPlayer!.isPlaying ? 'Stop' : 'Play'),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              Text(_mPlayer!.isPlaying
-                  ? 'Playback in progress'
-                  : 'Player is stopped'),
-            ])),
-        Container(
-          margin: const EdgeInsets.all(3),
-          padding: const EdgeInsets.all(3),
-          height: 110,
-          width: double.infinity,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: const Color(0xFFFAF0E6),
-            border: Border.all(
-              color: Colors.indigo,
-              width: 3,
-            ),
-          ),
-          child: Column(
-            children: [
-              ListTile(
-                tileColor: const Color(0xFFFAF0E6),
-                title: const Text('PCM-Float32'),
-                dense: true,
-
-                //textColor: encoderSupported[Codec.pcmFloat32.index]
-                //? Colors.green
-                //: Colors.grey,
-                leading: Radio<Codec>(
-                  value: Codec.pcmFloat32,
-                  groupValue: codecSelected,
-                  onChanged: setCodec,
-                ),
-              ),
-              ListTile(
-                tileColor: const Color(0xFFFAF0E6),
-                title: const Text('PCM-Int16'),
-                dense: true,
-
-                ///textColor: encoderSupported[Codec.pcm16.index]
-                ///? Colors.green
-                //: Colors.grey,
-                leading: Radio<Codec>(
-                  value: Codec.pcm16,
-                  groupValue: codecSelected,
-                  onChanged: setCodec,
-                ),
-              ),
-            ],
-          ),
+        IconButton(
+          onPressed: getPlaybackFn(),
+          //color: Colors.white,
+          //disabledColor: Colors.grey,
+          icon: _mPlayer!.isPlaying
+              ? const Icon(Icons.pause)
+              : const Icon(Icons.play_arrow),
         ),
       ]);
     }
