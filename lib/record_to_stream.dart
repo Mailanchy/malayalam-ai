@@ -13,6 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/foundation.dart';
 import 'package:lottie/lottie.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 ///
 typedef _Fn = void Function();
@@ -42,6 +43,7 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
   final WebSocketManager _webSocketManager = WebSocketManager();
 
   bool flag = false;
+  final TEXT_DURATION = 3;
 
   @override
   void initState() {
@@ -283,7 +285,7 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
 
           Center(
               child: AnimatedOpacity(
-                  duration: const Duration(seconds: 1),
+                  duration: const Duration(seconds: 3),
                   opacity: flag ? 1 : 0,
                   child: Lottie.asset('assets/anim.json'))),
 
@@ -300,31 +302,80 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
                     AudioVisual(waveLeft: true, volume: _dbLevel),
 
                   // Mic button in center
-                  Container(
-                    width: 80,
-                    height: 80,
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.black.withOpacity(0.9),
-                      boxShadow: [
-                        BoxShadow(
-                          color: _mRecorder!.isRecording
-                              ? Colors.white.withOpacity(0.7)
-                              : Colors.blueAccent.withOpacity(0.6),
-                          blurRadius: 20,
-                          spreadRadius: 5,
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (_mplaybackReady && !flag)
+                        DefaultTextStyle(
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontFamily: 'Horizon',
+                          ),
+                          child: AnimatedTextKit(
+                            totalRepeatCount: 1,
+                            animatedTexts: [
+                              RotateAnimatedText(
+                                '...',
+                                duration: Duration(seconds: TEXT_DURATION),
+                              ),
+                              RotateAnimatedText(
+                                'Diarizing...',
+                                duration: Duration(seconds: TEXT_DURATION),
+                              ),
+                              RotateAnimatedText(
+                                'Transcribing...',
+                                duration: Duration(seconds: TEXT_DURATION),
+                              ),
+                              RotateAnimatedText(
+                                'Translating...',
+                                duration: Duration(seconds: TEXT_DURATION),
+                              ),
+                              RotateAnimatedText(
+                                'Generating Inference...',
+                                duration: Duration(seconds: TEXT_DURATION),
+                              ),
+                              RotateAnimatedText(
+                                'Reverse Translating...',
+                                duration: Duration(seconds: TEXT_DURATION),
+                              ),
+                              RotateAnimatedText(
+                                'Generating Speech...',
+                                duration: Duration(seconds: TEXT_DURATION),
+                              ),
+                            ],
+                            onTap: () {
+                              print("Tap Event");
+                            },
+                          ),
                         ),
-                      ],
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        _mRecorder!.isRecording ? Icons.mic_off : Icons.mic,
-                        size: 36,
-                        color: Colors.white,
+                      const SizedBox(height: 12),
+                      Container(
+                        width: 80,
+                        height: 80,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.black.withOpacity(0.9),
+                          boxShadow: [
+                            BoxShadow(
+                              color: _mRecorder!.isRecording
+                                  ? Colors.white.withOpacity(0.7)
+                                  : Colors.blueAccent.withOpacity(0.6),
+                              blurRadius: 20,
+                              spreadRadius: 5,
+                            ),
+                          ],
+                        ),
+                        child: IconButton(
+                          icon: Icon(
+                            _mRecorder!.isRecording ? Icons.mic_off : Icons.mic,
+                            size: 36,
+                            color: Colors.white,
+                          ),
+                          onPressed: getRecorderFn(),
+                        ),
                       ),
-                      onPressed: getRecorderFn(),
-                    ),
+                    ],
                   ),
 
                   if (_mRecorder!.isRecording)
