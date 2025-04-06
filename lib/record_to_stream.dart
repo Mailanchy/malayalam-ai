@@ -44,6 +44,31 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
 
   bool flag = false;
   final TEXT_DURATION = 3;
+  String selectedModel = 'malayalam';
+
+  PopupMenuItem<String> _buildMenuItem(String value, String text) {
+    final isSelected = selectedModel == value;
+    return PopupMenuItem<String>(
+      value: value,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      child: Row(
+        children: [
+          if (isSelected)
+            const Icon(Icons.check, color: Colors.blueAccent, size: 18),
+          if (isSelected) const SizedBox(width: 8),
+          Text(
+            text,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 
   @override
   void initState() {
@@ -283,18 +308,130 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
             ),
           ),
 
-          Center(
+          // Top-left selected model label
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 48.0, left: 20.0),
               child: Container(
-                width: 200,
-                height: 200,
-                child: AnimatedOpacity(
-                    duration: const Duration(seconds: 3),
-                    opacity: flag ? 1 : 0,
-                    child: Lottie.asset('assets/anim.json')),
-              )),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blueAccent.withOpacity(0.0),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Text(
+                  selectedModel == 'malayalam' ? 'Malayalam Model' : 'Manglish Model',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ),
 
-          // Mic button
-          // Inside Stack children
+          // Top-right popup menu (3-dot settings icon)
+          Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 40.0, right: 20.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blueAccent.withOpacity(0.6),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: PopupMenuButton<String>(
+                  icon: const Icon(
+                    Icons.more_vert,
+                    color: Colors.white,
+                  ),
+                  color: Colors.black87,
+                  padding: EdgeInsets.zero,
+                  onSelected: (value) {
+                    setState(() {
+                      selectedModel = value;
+                    });
+                    print('Selected: $value');
+                  },
+                  itemBuilder: (BuildContext context) => [
+                    _buildMenuItem('malayalam', 'Malayalam Model'),
+                    _buildMenuItem('manglish', 'Manglish Model'),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+
+
+
+          // Top center text with glow and shifted down to avoid overlap
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 170.0),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blueAccent.withOpacity(0.6),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Text(
+                  "Hello, ഞാൻ നിങ്ങളെ സഹായിക്കാൻ തയ്യാറാണ്...",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 4,
+                        color: Colors.black54,
+                        offset: Offset(2, 2),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // Lottie animation in the center
+          Center(
+            child: Container(
+              width: 200,
+              height: 200,
+              child: AnimatedOpacity(
+                duration: const Duration(seconds: 3),
+                opacity: flag ? 1 : 0,
+                child: Lottie.asset('assets/anim.json'),
+              ),
+            ),
+          ),
+
+          // Mic button and animated text
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -305,11 +442,10 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
                   if (_mRecorder!.isRecording)
                     AudioVisual(waveLeft: true, volume: _dbLevel),
 
-                  // Mic button in center
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (_mplaybackReady && !flag)
+                      if (_mplaybackReady && !flag && !_mRecorder!.isRecording)
                         DefaultTextStyle(
                           style: const TextStyle(
                             fontSize: 18,
@@ -391,5 +527,6 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
         ],
       ),
     );
+
   }
 }
