@@ -12,6 +12,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/foundation.dart';
+import 'package:lottie/lottie.dart';
 
 ///
 typedef _Fn = void Function();
@@ -267,14 +268,7 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
           ),
 
           Center(
-            child: IconButton(
-              onPressed: getPlaybackFn(),
-              //color: Colors.white,
-              //disabledColor: Colors.grey,
-              icon: _mPlayer!.isPlaying
-                  ? const Icon(Icons.pause)
-                  : const Icon(Icons.play_arrow),
-            ),
+            child: Lottie.asset('assets/anim.json')
           ),
 
           // Mic button
