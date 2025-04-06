@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:example/audio_visual.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -223,6 +224,10 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
       ]);
     }
 
+    // return Scaffold(
+    //   body: makeBody(),
+    // );
+
     return Scaffold(
       body: Stack(
         children: [
@@ -243,7 +248,8 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // if (isRecording) AudioVisual(waveLeft: true, volume: micVolume),
+                  if (_mRecorder!.isRecording)
+                    AudioVisual(waveLeft: true, volume: _dbLevel),
 
                   // Mic button in center
                   Container(
@@ -269,11 +275,12 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
                         size: 36,
                         color: Colors.white,
                       ),
-                      onPressed: () {},
+                      onPressed: getRecorderFn(),
                     ),
                   ),
 
-                  // if (_mRecorder!.isRecording) AudioVisual(waveLeft: false, volume: micVolume),
+                  if (_mRecorder!.isRecording)
+                    AudioVisual(waveLeft: false, volume: _dbLevel),
                 ],
               ),
             ),
