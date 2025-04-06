@@ -284,10 +284,14 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
           ),
 
           Center(
-              child: AnimatedOpacity(
-                  duration: const Duration(seconds: 3),
-                  opacity: flag ? 1 : 0,
-                  child: Lottie.asset('assets/anim.json'))),
+              child: Container(
+                width: 200,
+                height: 200,
+                child: AnimatedOpacity(
+                    duration: const Duration(seconds: 3),
+                    opacity: flag ? 1 : 0,
+                    child: Lottie.asset('assets/anim.json')),
+              )),
 
           // Mic button
           // Inside Stack children
