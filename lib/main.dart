@@ -1,4 +1,4 @@
-import 'package:example/record_to_stream_example.dart';
+import 'package:example/record_to_stream.dart';
 import 'package:flutter/material.dart';
 
 void main() {
