@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:example/audio_visual.dart';
+import 'package:example/util/pcm_to_wav.dart';
+import 'package:example/util/wav_to_base64.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -144,6 +146,12 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
     if (_mRecordingDataSubscription != null) {
       await _mRecordingDataSubscription!.cancel();
       _mRecordingDataSubscription = null;
+    }
+
+    if (_mPath != null) {
+      String wavPath = await convertPcmToWav(_mPath!);
+      String wavBase64Data = await convertWavToBase64(wavPath);
+      print(wavBase64Data);
     }
 
     _mplaybackReady = true;
