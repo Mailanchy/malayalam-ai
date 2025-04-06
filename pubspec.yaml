@@ -60,6 +60,7 @@ dependencies:
   just_audio: ^0.9.11
   audio_session: ^0.1.6
   logger: ^2.0.2
+  rive: ^0.13.20
 
 
 
