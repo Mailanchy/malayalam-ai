@@ -224,7 +224,62 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
     }
 
     return Scaffold(
-      body: makeBody(),
+      body: Stack(
+        children: [
+          // Fullscreen background image
+          SizedBox.expand(
+            child: Image.asset(
+              'assets/image.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          // Mic button
+          // Inside Stack children
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 40.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // if (isRecording) AudioVisual(waveLeft: true, volume: micVolume),
+
+                  // Mic button in center
+                  Container(
+                    width: 80,
+                    height: 80,
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.black.withOpacity(0.9),
+                      boxShadow: [
+                        BoxShadow(
+                          color: _mRecorder!.isRecording
+                              ? Colors.white.withOpacity(0.7)
+                              : Colors.blueAccent.withOpacity(0.6),
+                          blurRadius: 20,
+                          spreadRadius: 5,
+                        ),
+                      ],
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        _mRecorder!.isRecording ? Icons.mic_off : Icons.mic,
+                        size: 36,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
+
+                  // if (_mRecorder!.isRecording) AudioVisual(waveLeft: false, volume: micVolume),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
