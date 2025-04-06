@@ -2,7 +2,7 @@ import 'dart:io';
 
 class WebSocketManager {
   // The WebSocket server URL.
-  final String url = "ws://192.168.100.65:8000/chat";
+  final String url = "ws://137.184.6.3/chat";
   WebSocket? _socket;
 
   /// Connects to the WebSocket.
