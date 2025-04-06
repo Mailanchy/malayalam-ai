@@ -239,6 +239,17 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
             ),
           ),
 
+          Center(
+            child: IconButton(
+              onPressed: getPlaybackFn(),
+              //color: Colors.white,
+              //disabledColor: Colors.grey,
+              icon: _mPlayer!.isPlaying
+                  ? const Icon(Icons.pause)
+                  : const Icon(Icons.play_arrow),
+            ),
+          ),
+
           // Mic button
           // Inside Stack children
           Align(
