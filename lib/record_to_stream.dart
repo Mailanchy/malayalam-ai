@@ -41,6 +41,8 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
 
   final WebSocketManager _webSocketManager = WebSocketManager();
 
+  bool flag = false;
+
   @override
   void initState() {
     super.initState();
@@ -52,7 +54,19 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
       _webSocketManager.listen((message) async {
         final base64Data = message;
         final wavPath = await convertBase64ToWav(base64Data);
-        await playWavFile(wavPath);
+        await playWavFile(
+          wavPath,
+          onFinished: () {
+            setState(() {
+              flag = false;
+            });
+          },
+          onStarted: () {
+            setState(() {
+              flag = true;
+            });
+          },
+        );
       });
     });
 
@@ -268,8 +282,10 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
           ),
 
           Center(
-            child: Lottie.asset('assets/anim.json')
-          ),
+              child: AnimatedOpacity(
+                  duration: const Duration(seconds: 1),
+                  opacity: flag ? 1 : 0,
+                  child: Lottie.asset('assets/anim.json'))),
 
           // Mic button
           // Inside Stack children

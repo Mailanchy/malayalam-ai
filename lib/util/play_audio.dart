@@ -1,22 +1,33 @@
 import 'package:flutter_sound/flutter_sound.dart';
 
 /// Plays a WAV file at [wavPath] using FlutterSoundPlayer.
-Future<void> playWavFile(String wavPath) async {
-  // Create and open a FlutterSoundPlayer instance.
+/// Optional callbacks:
+/// [onStarted] is called when playback starts.
+/// [onFinished] is called when playback ends.
+Future<void> playWavFile(
+    String wavPath, {
+      void Function()? onStarted,
+      void Function()? onFinished,
+    }) async {
   final FlutterSoundPlayer player = FlutterSoundPlayer();
+
   try {
     await player.openPlayer();
+
     await player.startPlayer(
       fromURI: wavPath,
       codec: Codec.pcm16WAV,
       whenFinished: () async {
-        // Close the player when playback is finished.
+        if (onFinished != null) onFinished();
         await player.closePlayer();
       },
     );
+
+    // Playback has started successfully
+    if (onStarted != null) onStarted();
+
   } catch (e) {
     print("Error playing WAV file: $e");
-    // Ensure the player is closed in case of an error.
     await player.closePlayer();
   }
 }
