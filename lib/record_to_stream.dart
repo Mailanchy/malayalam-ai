@@ -464,8 +464,7 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
                     AudioVisual(waveLeft: true, volume: _dbLevel),
 
                   Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
+                    mainAxisSize: MainAxisSize.min, children: [
                       if (isWaitingForResponse)
                         DefaultTextStyle(
                           style: const TextStyle(
