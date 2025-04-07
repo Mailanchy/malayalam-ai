@@ -14,6 +14,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/foundation.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'dart:convert';
+
 
 ///
 typedef _Fn = void Function();
@@ -44,7 +46,7 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
 
   bool flag = false;
   final TEXT_DURATION = 3;
-  String selectedModel = 'malayalam';
+  String selectedModel = 'Manglish';
 
   PopupMenuItem<String> _buildMenuItem(String value, String text) {
     final isSelected = selectedModel == value;
@@ -327,7 +329,7 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
                   ],
                 ),
                 child: Text(
-                  selectedModel == 'malayalam' ? 'Malayalam Model' : 'Manglish Model',
+                  selectedModel == 'Manglish' ? 'Manglish Model' : 'Malayalam Model',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,
@@ -363,16 +365,26 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
                   color: Colors.black87,
                   padding: EdgeInsets.zero,
                   onSelected: (value) {
-                    setState(() {
-                      selectedModel = value;
-                    });
-                    print('Selected: $value');
+                    if (value == 'malayalam' || value == 'manglish') {
+                      setState(() {
+                        selectedModel = value;
+                      });
+
+                      final jsonMessage = jsonEncode({
+                        "type": "model_select",
+                        "model": value,
+                      });
+
+                      _webSocketManager.sendText(jsonMessage);
+                      print('Sent model select: $jsonMessage');
+                    }
                   },
                   itemBuilder: (BuildContext context) => [
                     _buildMenuItem('malayalam', 'Malayalam Model'),
                     _buildMenuItem('manglish', 'Manglish Model'),
                   ],
                 ),
+
               ),
             ),
           ),
