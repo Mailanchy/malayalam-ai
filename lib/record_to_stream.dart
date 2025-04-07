@@ -29,6 +29,7 @@ class RecordToStreamExample extends StatefulWidget {
 }
 
 class _RecordToStreamExampleState extends State<RecordToStreamExample> {
+
   FlutterSoundPlayer? _mPlayer = FlutterSoundPlayer();
   FlutterSoundRecorder? _mRecorder = FlutterSoundRecorder();
   bool _mPlayerIsInited = false;
@@ -47,6 +48,8 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
   bool flag = false;
   final TEXT_DURATION = 3;
   String selectedModel = 'Manglish';
+  bool isWaitingForResponse = false;
+
 
   PopupMenuItem<String> _buildMenuItem(String value, String text) {
     final isSelected = selectedModel == value;
@@ -93,6 +96,7 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
           onStarted: () {
             setState(() {
               flag = true;
+              isWaitingForResponse = false; // <-- hide rotating text
             });
           },
         );
@@ -212,6 +216,11 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
     if (_mPath != null) {
       String wavPath = await convertPcmToWav(_mPath!);
       String wavBase64Data = await convertWavToBase64(wavPath);
+
+      setState(() {
+        isWaitingForResponse = true;
+      });
+
 
       // Send data to websocket
       _webSocketManager.sendText(wavBase64Data);
@@ -457,7 +466,7 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (_mplaybackReady && !flag && !_mRecorder!.isRecording)
+                      if (isWaitingForResponse)
                         DefaultTextStyle(
                           style: const TextStyle(
                             fontSize: 18,
